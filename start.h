@@ -9,6 +9,10 @@ using namespace std;
 #define OnButtonL1Clicked		8
 #define OnButtonL10Clicked		9
 #define OnButtonL100Clicked		10
+
+HWND hEditControl;
+HWND hStaticControl;
+
 LRESULT CALLBACK SoftwareMainProcedure(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp);
 WNDCLASS NewWindowClass(HBRUSH BGColor, HCURSOR Cursor, HINSTANCE hinst, HICON Icon, LPCWSTR Name, WNDPROC Procedure);
 
@@ -44,3 +48,4 @@ void turnleft(int step)
     mouse_event(MOUSEEVENTF_RIGHTUP, nx, 230, 0, 0);
     Sleep(300);
 }
+
