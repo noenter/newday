@@ -48,7 +48,7 @@ LRESULT CALLBACK SoftwareMainProcedure(HWND hWnd, UINT msg, WPARAM wp, LPARAM lp
 	GetCursorPos(&CurPos);
 	x = (int)CurPos.x;
 	y = (int)CurPos.y;
-	SetWindowTextA(hWnd, a);
+	SetWindowTextA(hWnd, );
 
 	switch (msg) {
 	case WM_COMMAND:
