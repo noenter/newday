@@ -1,17 +1,18 @@
 #include <Windows.h>
 #include "start.h"
-
-
+#include <stdlib.h>
+#include <string>
 
 POINT CurPos;
 int x, y;
-
-string to_string(int n)
-{
-	char buf[40];
-	sprintf(buf, "%d", n);
-	return buf;
+void GetCurPos() {
+	GetCursorPos(&CurPos);
+	x = (int)CurPos.x;
+	y = (int)CurPos.y;
+	char str[80];
+	SetWindowTextA(hStaticControl, ("X-" + std::to_string(x) + " Y-" + std::to_string(y)).c_str());
 }
+
 
 int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR args, int ncmdshow) {
 
@@ -28,7 +29,8 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR args, int ncmdsho
 		DispatchMessage(&SoftwareMainMessage);
 	}
 	return 0;
-}
+
+	}
 
 WNDCLASS NewWindowClass(HBRUSH BGColor, HCURSOR Cursor, HINSTANCE hinst, HICON Icon, LPCWSTR Name, WNDPROC Procedure) {
 		WNDCLASS NWC = { 0 };
@@ -45,12 +47,10 @@ WNDCLASS NewWindowClass(HBRUSH BGColor, HCURSOR Cursor, HINSTANCE hinst, HICON I
 	
 LRESULT CALLBACK SoftwareMainProcedure(HWND hWnd, UINT msg, WPARAM wp, LPARAM lp) {
 
-	GetCursorPos(&CurPos);
-	x = (int)CurPos.x;
-	y = (int)CurPos.y;
-	SetWindowTextA(hWnd, );
+	GetCurPos();
 
 	switch (msg) {
+
 	case WM_COMMAND:
 		switch (wp) {
 		case OnButtonR1Clicked:
@@ -92,9 +92,9 @@ LRESULT CALLBACK SoftwareMainProcedure(HWND hWnd, UINT msg, WPARAM wp, LPARAM lp
 
 void MainWndAddWidgets(HWND hWnd) {
 
-	CreateWindowA("static", "Hello Window!", WS_VISIBLE | WS_CHILD, 5, 5, 490, 20, hWnd, NULL, NULL, NULL, NULL);
+	hStaticControl = CreateWindowA("static", "Hello Window!", WS_VISIBLE | WS_CHILD, 5, 5, 490, 20, hWnd, NULL, NULL, NULL, NULL);
 
-	CreateWindowA("edit", "dfgdfgdgdg", WS_VISIBLE | WS_CHILD, 5, 30, 490, 20, hWnd, NULL, NULL, NULL, NULL);
+	hEditControl = CreateWindowA("edit", "dfgdfgdgdg", WS_VISIBLE | WS_CHILD, 5, 30, 490, 20, hWnd, NULL, NULL, NULL, NULL);
 
 //	CreateWindowA("button", "Click me!", WS_VISIBLE | WS_CHILD | ES_CENTER, 5, 60, 120, 30, hWnd, (HMENU)OnButtonClicked, NULL, NULL, NULL);
 	CreateWindowA("button", "R-1", WS_VISIBLE | WS_CHILD | ES_CENTER, 0, 60, 32, 18, hWnd, (HMENU)OnButtonR1Clicked, NULL, NULL, NULL);
