@@ -53,50 +53,50 @@ LRESULT CALLBACK SoftwareMainProcedure(HWND hWnd, UINT msg, WPARAM wp, LPARAM lp
 	case WM_COMMAND:
 		switch (wp) {
 		case OnButtonR1Clicked:
-			SetCursorPos(x, 180);
-			mouse_event(MOUSEEVENTF_RIGHTDOWN, x, 180, 0, 0);
+			SetCursorPos(xc, yc);
+			mouse_event(MOUSEEVENTF_RIGHTDOWN, xc, yc, 0, 0);
 			Sleep(10);
-			mouse_event(MOUSEEVENTF_RIGHTUP, x, 180, 0, 0);
+			mouse_event(MOUSEEVENTF_RIGHTUP, xc, yc, 0, 0);
 			Sleep(500);
 			turnright(1);
 			break;
 		case OnButtonR10Clicked:
-			SetCursorPos(x, 180);
-			mouse_event(MOUSEEVENTF_RIGHTDOWN, x, 180, 0, 0);
+			SetCursorPos(xc, yc);
+			mouse_event(MOUSEEVENTF_RIGHTDOWN, xc, yc, 0, 0);
 			Sleep(10);
-			mouse_event(MOUSEEVENTF_RIGHTUP, x, 180, 0, 0);
+			mouse_event(MOUSEEVENTF_RIGHTUP, xc, yc, 0, 0);
 			Sleep(500);
 			turnright(10);
 			break;
 		case OnButtonR100Clicked:
-			SetCursorPos(x, 180);
-			mouse_event(MOUSEEVENTF_RIGHTDOWN, x, 180, 0, 0);
+			SetCursorPos(xc, yc);
+			mouse_event(MOUSEEVENTF_RIGHTDOWN, xc, yc, 0, 0);
 			Sleep(10);
-			mouse_event(MOUSEEVENTF_RIGHTUP, x, 180, 0, 0);
+			mouse_event(MOUSEEVENTF_RIGHTUP, xc, yc, 0, 0);
 			Sleep(500);
 			turnright(100);
 			break;
 		case OnButtonL1Clicked:
-			SetCursorPos(x, 180);
-			mouse_event(MOUSEEVENTF_RIGHTDOWN, x, 180, 0, 0);
+			SetCursorPos(xc, yc);
+			mouse_event(MOUSEEVENTF_RIGHTDOWN, xc, yc, 0, 0);
 			Sleep(10);
-			mouse_event(MOUSEEVENTF_RIGHTUP, x, 180, 0, 0);
+			mouse_event(MOUSEEVENTF_RIGHTUP, xc, yc, 0, 0);
 			Sleep(500);
 			turnleft(1);
 			break;
 		case OnButtonL10Clicked:
-			SetCursorPos(x, 180);
-			mouse_event(MOUSEEVENTF_RIGHTDOWN, x, 180, 0, 0);
+			SetCursorPos(xc, yc);
+			mouse_event(MOUSEEVENTF_RIGHTDOWN, xc, yc, 0, 0);
 			Sleep(10);
-			mouse_event(MOUSEEVENTF_RIGHTUP, x, 180, 0, 0);
+			mouse_event(MOUSEEVENTF_RIGHTUP, xc, yc, 0, 0);
 			Sleep(500);
 			turnleft(10);
 			break;
 		case OnButtonL100Clicked:
-			SetCursorPos(x, 180);
-			mouse_event(MOUSEEVENTF_RIGHTDOWN, x, 180, 0, 0);
+			SetCursorPos(xc, yc);
+			mouse_event(MOUSEEVENTF_RIGHTDOWN, xc, yc, 0, 0);
 			Sleep(10);
-			mouse_event(MOUSEEVENTF_RIGHTUP, x, 180, 0, 0);
+			mouse_event(MOUSEEVENTF_RIGHTUP, xc, yc, 0, 0);
 			Sleep(500);
 			turnleft(100);
 			break;
@@ -104,7 +104,9 @@ LRESULT CALLBACK SoftwareMainProcedure(HWND hWnd, UINT msg, WPARAM wp, LPARAM lp
 			ResumeThread(thread);
 			break;
 		case OnButtonPauseGUIClicked:
-			SuspendThread(thread);
+			if (pause) { SuspendThread(thread); }
+			else{ResumeThread(thread);}
+			!pause;
 			break;
 
 		case OnButtonStopGUIClicked:
