@@ -116,6 +116,7 @@ void CheckTarget()
     {
         nt++;
         SetWindowTextA(hStaticControl, ("Not-Target" + std::to_string(nt)).c_str());
+        SetWindowTextA(hStaticControl2, "");
         ReleaseDC(NULL, dng);
         target = false;
         if (nt == 1)
