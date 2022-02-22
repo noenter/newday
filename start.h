@@ -156,8 +156,7 @@ void CheckTarget()
 }
 void CheckKill()
 {
-    int xkn = xk + 21;
-    while (xk < xkn)
+    while (xk < xk+21)
     {   HDC dng = GetDC(NULL);
         COLORREF c = GetPixel(dng, xk, yk);
         int pr = (int)GetRValue(c);
