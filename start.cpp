@@ -22,7 +22,7 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR args, int ncmdsho
 	if (!RegisterClassW(&SoftwareMainClass)) { return -1; }
 	MSG SoftwareMainMessage = { 0 };
 
-	CreateWindowEx(WS_EX_TOPMOST, L"MainWndClass", L"First C++ window", WS_OVERLAPPEDWINDOW | WS_VISIBLE | WS_BORDER , 824, 0, 200, 300, NULL, NULL, NULL, NULL);
+	CreateWindowEx(WS_EX_TOPMOST, L"MainWndClass", L"First C++ window", WS_OVERLAPPEDWINDOW | WS_VISIBLE | WS_BORDER , 0, 200, 200, 300, NULL, NULL, NULL, NULL);
 	
 	while (GetMessage(&SoftwareMainMessage, NULL, NULL, NULL))
 	{
@@ -101,14 +101,15 @@ LRESULT CALLBACK SoftwareMainProcedure(HWND hWnd, UINT msg, WPARAM wp, LPARAM lp
 			turnleft(100);
 			break;
 		case OnButtonStartGUIClicked:
-			stgui = false;
+			ResumeThread(thread);
 			break;
+		case OnButtonPauseGUIClicked:
+			SuspendThread(thread);
+			break;
+
 		case OnButtonStopGUIClicked:
 			isTreading = false;
-			stgui = true;
-			Sleep(500);
-			CloseHandle(thread2);
-			ExitThread(0);
+			TerminateThread(thread, 0);
 			break;
 
 		default: break;
@@ -116,13 +117,11 @@ LRESULT CALLBACK SoftwareMainProcedure(HWND hWnd, UINT msg, WPARAM wp, LPARAM lp
 		break;
 	case WM_CREATE:
 		MainWndAddWidgets(hWnd);
-		thread = CreateThread(NULL, 0, thread2, NULL, 0, NULL);
+		thread = CreateThread(NULL, 0, thread2, NULL, CREATE_SUSPENDED, NULL);
 		break;
 	case WM_DESTROY:
 		isTreading = false;
-		stgui = true;
-		CloseHandle(thread2);
-		ExitProcess(0);
+		TerminateThread(thread, 0);
 		PostQuitMessage(0);
 
 		break;
@@ -133,24 +132,24 @@ LRESULT CALLBACK SoftwareMainProcedure(HWND hWnd, UINT msg, WPARAM wp, LPARAM lp
 void MainWndAddWidgets(HWND hWnd)
 {
 	// статик поля
-	hStaticControl = CreateWindowA("static", "Info 1", WS_VISIBLE | WS_CHILD, 1, 1, 190, 20, hWnd, NULL, NULL, NULL);
-	hStaticControl2 = CreateWindowA("static", "Info 2", WS_VISIBLE | WS_CHILD, 1, 21, 190, 20, hWnd, NULL, NULL, NULL);
+	hStaticControl = CreateWindowA("static", "Info 1", WS_VISIBLE | WS_CHILD, 1, 1, 95, 20, hWnd, NULL, NULL, NULL);
+	hStaticControl2 = CreateWindowA("static", "Info 2", WS_VISIBLE | WS_CHILD, 100, 1, 95, 20, hWnd, NULL, NULL, NULL);
 	hStaticControl3 = CreateWindowA("static", "Info 3", WS_VISIBLE | WS_CHILD, 1, 42, 190, 20, hWnd, NULL, NULL, NULL);
 
 	//эдит поля
 	hEditControl = CreateWindowA("edit", "dfgdfgdgdg", WS_VISIBLE | WS_CHILD, 1, 170, 190, 20, hWnd, NULL, NULL, NULL);
 
-//	CreateWindowA("button", "Click me!", WS_VISIBLE | WS_CHILD | ES_CENTER, 5, 60, 120, 30, hWnd, (HMENU)OnButtonClicked, NULL, NULL, NULL);
-	CreateWindowA("button", "R-1", WS_VISIBLE | WS_CHILD | ES_CENTER, 0, 60, 32, 18, hWnd, (HMENU)OnButtonR1Clicked, NULL, NULL);
-	CreateWindowA("button", "R-10", WS_VISIBLE | WS_CHILD | ES_CENTER, 32, 60, 40, 18, hWnd, (HMENU)OnButtonR10Clicked, NULL, NULL);
-	CreateWindowA("button", "R-100", WS_VISIBLE | WS_CHILD | ES_CENTER, 72, 60, 48, 18, hWnd, (HMENU)OnButtonR100Clicked, NULL, NULL);
+	CreateWindowA("button", "R-1", WS_VISIBLE | WS_CHILD | ES_CENTER, 0, 160, 32, 18, hWnd, (HMENU)OnButtonR1Clicked, NULL, NULL);
+	CreateWindowA("button", "R-10", WS_VISIBLE | WS_CHILD | ES_CENTER, 32, 160, 40, 18, hWnd, (HMENU)OnButtonR10Clicked, NULL, NULL);
+	CreateWindowA("button", "R-100", WS_VISIBLE | WS_CHILD | ES_CENTER, 72, 160, 48, 18, hWnd, (HMENU)OnButtonR100Clicked, NULL, NULL);
 
-	CreateWindowA("button", "L-1", WS_VISIBLE | WS_CHILD | ES_CENTER, 0, 80, 32, 18, hWnd, (HMENU)OnButtonL1Clicked, NULL, NULL);
-	CreateWindowA("button", "L-10", WS_VISIBLE | WS_CHILD | ES_CENTER, 32, 80, 40, 18, hWnd, (HMENU)OnButtonL10Clicked, NULL, NULL);
-	CreateWindowA("button", "L-100", WS_VISIBLE | WS_CHILD | ES_CENTER, 72, 80, 48, 18, hWnd, (HMENU)OnButtonL100Clicked, NULL, NULL);
+	CreateWindowA("button", "L-1", WS_VISIBLE | WS_CHILD | ES_CENTER, 0, 180, 32, 18, hWnd, (HMENU)OnButtonL1Clicked, NULL, NULL);
+	CreateWindowA("button", "L-10", WS_VISIBLE | WS_CHILD | ES_CENTER, 32, 180, 40, 18, hWnd, (HMENU)OnButtonL10Clicked, NULL, NULL);
+	CreateWindowA("button", "L-100", WS_VISIBLE | WS_CHILD | ES_CENTER, 72, 180, 48, 18, hWnd, (HMENU)OnButtonL100Clicked, NULL, NULL);
 
-	CreateWindowA("button", "StartGUI", WS_VISIBLE | WS_CHILD | ES_CENTER, 10, 110, 60, 18, hWnd, (HMENU)OnButtonStartGUIClicked, NULL, NULL);
-	CreateWindowA("button", "StopGUI", WS_VISIBLE | WS_CHILD | ES_CENTER, 10, 150, 60, 18, hWnd, (HMENU)OnButtonStopGUIClicked, NULL, NULL);
+	CreateWindowA("button", "Start", WS_VISIBLE | WS_CHILD | ES_CENTER, 0, 70, 58, 18, hWnd, (HMENU)OnButtonStartGUIClicked, NULL, NULL);
+	CreateWindowA("button", "Stop", WS_VISIBLE | WS_CHILD | ES_CENTER, 60, 70, 58, 18, hWnd, (HMENU)OnButtonStopGUIClicked, NULL, NULL);
+	CreateWindowA("button", "Pause", WS_VISIBLE | WS_CHILD | ES_CENTER, 120, 70, 58, 18, hWnd, (HMENU)OnButtonPauseGUIClicked, NULL, NULL);
 
 
 }

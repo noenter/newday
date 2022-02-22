@@ -14,9 +14,9 @@ using namespace std;
 
 #define OnButtonStartGUIClicked	11
 #define OnButtonStopGUIClicked	12
+#define OnButtonPauseGUIClicked 13
 
 int idmob = 0;
-volatile bool stgui = true;
 volatile bool isTreading = true;
 bool target = false;
 int nt = 0;
@@ -37,16 +37,7 @@ void StartGUI();
 
 DWORD WINAPI thread2(LPVOID t) 
 {
-    while (isTreading)
-    {
-        while (stgui)
-        {
-            //SetWindowTextA(hStaticControl, "Whit");
-        }
-        StartGUI();
-    }
-    CloseHandle(thread2);
-    Sleep(1000);
+    StartGUI();
     return 0;
 }
 
@@ -82,8 +73,7 @@ void SetF7()
     Sleep(50);
 }
 void SetF8()
-{
-    keybd_event(0x77, 0x45, KEYEVENTF_EXTENDEDKEY | 0, 0);
+{   keybd_event(0x77, 0x45, KEYEVENTF_EXTENDEDKEY | 0, 0);
     Sleep(50);
     keybd_event(0x77, 0x45, KEYEVENTF_EXTENDEDKEY | KEYEVENTF_KEYUP, 0);
     Sleep(50);
@@ -132,15 +122,7 @@ void CheckTarget()
         {
             Set3();
         }
-        if (nt == 10)
-        {
-            Set1();
-        }
-        if (nt == 40)
-        {
-            Set1();
-        }
-        if (nt == 70)
+        if (nt == 10 || nt == 30 || nt == 50 || nt == 70 || nt == 90 || nt == 110 || nt == 130 || nt == 150)
         {
             Set1();
         }
@@ -223,16 +205,14 @@ void CheckKill()
 }
 
 void leftclick(int xc, int yc)
-{
-    SetCursorPos(xc, yc);
+{   SetCursorPos(xc, yc);
     mouse_event(MOUSEEVENTF_LEFTDOWN, xc, yc, 0, 0);
     Sleep(50);
     mouse_event(MOUSEEVENTF_LEFTUP, xc, yc, 0, 0);
     Sleep(500);
 }
 void turnright(int step)
-{
-    int x = 500;
+{   int x = 500;
     SetCursorPos(x, 180);
     mouse_event(MOUSEEVENTF_RIGHTDOWN, x, 180, 0, 0);
     int nx = x + step;
@@ -242,8 +222,7 @@ void turnright(int step)
     Sleep(300);
 }
 void turnleft(int step)
-{
-    int x = 512;
+{   int x = 512;
     SetCursorPos(x, 180);
     mouse_event(MOUSEEVENTF_RIGHTDOWN, x, 180, 0, 0);
     int nx = x - step;
