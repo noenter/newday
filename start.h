@@ -18,9 +18,15 @@ using namespace std;
 int idmob = 0;
 volatile bool stgui = true;
 volatile bool isTreading = true;
+bool target = false;
+int nt = 0;
 
 HWND hEditControl;
+HWND hEditControl2;
+HWND hEditControl3;
 HWND hStaticControl;
+HWND hStaticControl2;
+HWND hStaticControl3;
 HANDLE thread;
 
 LRESULT CALLBACK SoftwareMainProcedure(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp);
@@ -38,118 +44,72 @@ DWORD WINAPI thread2(LPVOID t)
             //SetWindowTextA(hStaticControl, "Whit");
         }
         StartGUI();
-
     }
-
+    CloseHandle(thread2);
+    Sleep(1000);
     return 0;
 }
 
 void Setkeytab()
-{
-    keybd_event(0x09, 0x45, KEYEVENTF_EXTENDEDKEY | 0, 0);
+{   keybd_event(0x09, 0x45, KEYEVENTF_EXTENDEDKEY | 0, 0);
     Sleep(50);
     keybd_event(0x09, 0x45, KEYEVENTF_EXTENDEDKEY | KEYEVENTF_KEYUP, 0);
-    Sleep(100);
-    SetWindowTextA(hStaticControl, "Tab");
-    Sleep(500);
-
+    Sleep(50);
 }
-
 void Set1()
-{
-    // Simulate a key press
-    keybd_event(0x31,
-        0x45,
-        KEYEVENTF_EXTENDEDKEY | 0,
-        0);
+{   keybd_event(0x31, 0x45, KEYEVENTF_EXTENDEDKEY | 0, 0);
     Sleep(30);
-    // Simulate a key release
-    keybd_event(0x31,
-        0x45,
-        KEYEVENTF_EXTENDEDKEY | KEYEVENTF_KEYUP,
-        0);
-    Sleep(300);
-
+    keybd_event(0x31, 0x45, KEYEVENTF_EXTENDEDKEY | KEYEVENTF_KEYUP, 0);
+    Sleep(100);
 }
-
 void SetF1()
-{
-    // Simulate a key press
-    keybd_event(0x70,
-        0x45,
-        KEYEVENTF_EXTENDEDKEY | 0,
-        0);
+{   keybd_event(0x70, 0x45, KEYEVENTF_EXTENDEDKEY | 0, 0);
     Sleep(30);
-    // Simulate a key release
-    keybd_event(0x70,
-        0x45,
-        KEYEVENTF_EXTENDEDKEY | KEYEVENTF_KEYUP,
-        0);
+    keybd_event(0x70, 0x45, KEYEVENTF_EXTENDEDKEY | KEYEVENTF_KEYUP, 0);
+    Sleep(100);
 }
-
 void SetF5()
-{
-    // Simulate a key press
-    keybd_event(0x74,
-        0x45,
-        KEYEVENTF_EXTENDEDKEY | 0,
-        0);
-    Sleep(30);
-    // Simulate a key release
-    keybd_event(0x74,
-        0x45,
-        KEYEVENTF_EXTENDEDKEY | KEYEVENTF_KEYUP,
-        0);
+{   keybd_event(0x74, 0x45, KEYEVENTF_EXTENDEDKEY | 0, 0);
+    Sleep(50);
+    keybd_event(0x74, 0x45, KEYEVENTF_EXTENDEDKEY | KEYEVENTF_KEYUP, 0);
+    Sleep(50);
 }
-
+void SetF7()
+{
+    keybd_event(0x76, 0x45, KEYEVENTF_EXTENDEDKEY | 0, 0);
+    Sleep(50);
+    keybd_event(0x76, 0x45, KEYEVENTF_EXTENDEDKEY | KEYEVENTF_KEYUP, 0);
+    Sleep(50);
+}
+void SetF8()
+{
+    keybd_event(0x77, 0x45, KEYEVENTF_EXTENDEDKEY | 0, 0);
+    Sleep(50);
+    keybd_event(0x77, 0x45, KEYEVENTF_EXTENDEDKEY | KEYEVENTF_KEYUP, 0);
+    Sleep(50);
+}
 void Set5()
-{
-    // Simulate a key press
-    keybd_event(0x35,
-        0x45,
-        KEYEVENTF_EXTENDEDKEY | 0,
-        0);
+{   keybd_event(0x35, 0x45, KEYEVENTF_EXTENDEDKEY | 0, 0);
     Sleep(30);
-    // Simulate a key release
-    keybd_event(0x35,
-        0x45,
-        KEYEVENTF_EXTENDEDKEY | KEYEVENTF_KEYUP,
-        0);
+    keybd_event(0x35, 0x45, KEYEVENTF_EXTENDEDKEY | KEYEVENTF_KEYUP, 0);
 }
-
 void Set2()
-{
-    // Simulate a key press
-    keybd_event(0x32,
-        0x45,
-        KEYEVENTF_EXTENDEDKEY | 0,
-        0);
+{   keybd_event(0x32, 0x45, KEYEVENTF_EXTENDEDKEY | 0, 0);
     Sleep(30);
-    // Simulate a key release
-    keybd_event(0x32,
-        0x45,
-        KEYEVENTF_EXTENDEDKEY | KEYEVENTF_KEYUP,
-        0);
-    Sleep(300);
-
+    keybd_event(0x32, 0x45, KEYEVENTF_EXTENDEDKEY | KEYEVENTF_KEYUP, 0);
+    Sleep(100);
 }
-
 void Set3()
 {keybd_event(0x33, 0x45, KEYEVENTF_EXTENDEDKEY | 0, 0);
  Sleep(30);
  keybd_event(0x33, 0x45, KEYEVENTF_EXTENDEDKEY | KEYEVENTF_KEYUP, 0);
- Sleep(500);
+ Sleep(100);
 }
 
 void CheckTarget()
 {
-    Setkeytab();
-    SetWindowTextA(hStaticControl, "Key  -Tab");
     int xt = 406;
     int yt = 75;
-    while(isTreading){
-    Sleep(100);
-    SetWindowTextA(hStaticControl, "");
     HDC dng = GetDC(NULL);
     COLORREF c = GetPixel(dng, xt, yt);
     int pr = (int)GetRValue(c);
@@ -159,12 +119,32 @@ void CheckTarget()
         {
         SetWindowTextA(hStaticControl, "Target-OK");
         ReleaseDC(NULL, dng);
-        break;
+        target = true;
+        nt = 0;
         }
-    ReleaseDC(NULL, dng);
-    Setkeytab();
-    //SetWindowTextA(hStaticControl, "Key  -Tab");
-    //Sleep(300);
+    else
+    {
+        nt++;
+        SetWindowTextA(hStaticControl, ("Not-Target" + std::to_string(nt)).c_str());
+        ReleaseDC(NULL, dng);
+        target = false;
+        if (nt == 1)
+        {
+            Set3();
+        }
+        if (nt == 10)
+        {
+            Set1();
+        }
+        if (nt == 40)
+        {
+            Set1();
+        }
+        if (nt == 70)
+        {
+            Set1();
+        }
+        Setkeytab();
     }
 }
 
@@ -210,90 +190,124 @@ void getpixelMob()
 
 void CheckKill()
 {
-    int xk = 406;
-    int yk = 75;
-    while (isTreading)
+    int xk = 530;
+    int yk = 90;
+    while (xk < 551)
     {
         HDC dng = GetDC(NULL);
         COLORREF c = GetPixel(dng, xk, yk);
         int pr = (int)GetRValue(c);
         int pg = (int)GetGValue(c);
         int pb = (int)GetBValue(c);
-        //SetWindowTextA(hStaticControl, "Start - Kill");
-        //Sleep(500);
-        if (pr != 205 && pg != 44 && pb != 43)
+        if (pr == 135 && pg == 179 && pb == 59)
         {
+            SetWindowTextA(hStaticControl2, "Boss");
+            SetF5();
+            SetF7();
+            SetF8();
+            SetF1();
+            ReleaseDC(NULL, dng);
             break;
         }
-        SetWindowTextA(hStaticControl, "Kill");
-        Set2();
-        Sleep(500);
+        if (pr == 255 && pg == 140 && pb == 0)
+        {
+            SetWindowTextA(hStaticControl2, "Mob");
+            SetF5();
+            Set2();
+            ReleaseDC(NULL, dng);
+            break;
+        }
         ReleaseDC(NULL, dng);
+        xk++;
     }
 }
 
-
+void leftclick(int xc, int yc)
+{
+    SetCursorPos(xc, yc);
+    mouse_event(MOUSEEVENTF_LEFTDOWN, xc, yc, 0, 0);
+    Sleep(50);
+    mouse_event(MOUSEEVENTF_LEFTUP, xc, yc, 0, 0);
+    Sleep(500);
+}
 void turnright(int step)
 {
-    int x = 412;
-    SetCursorPos(x, 230);
-    mouse_event(MOUSEEVENTF_RIGHTDOWN, x, 230, 0, 0);
-    Sleep(10);
-    mouse_event(MOUSEEVENTF_RIGHTUP, x, 230, 0, 0);
-    Sleep(50);
-    mouse_event(MOUSEEVENTF_RIGHTDOWN, x, 230, 0, 0);
+    int x = 500;
+    SetCursorPos(x, 180);
+    mouse_event(MOUSEEVENTF_RIGHTDOWN, x, 180, 0, 0);
     int nx = x + step;
-    SetCursorPos(nx, 230);
+    SetCursorPos(nx, 180);
     Sleep(200);
-    mouse_event(MOUSEEVENTF_RIGHTUP, nx, 230, 0, 0);
+    mouse_event(MOUSEEVENTF_RIGHTUP, nx, 180, 0, 0);
     Sleep(300);
 }
 void turnleft(int step)
 {
-    int x = 612;
-    SetCursorPos(x, 230);
-    mouse_event(MOUSEEVENTF_RIGHTDOWN, x, 230, 0, 0);
-    Sleep(10);
-    mouse_event(MOUSEEVENTF_RIGHTUP, x, 230, 0, 0);
-    Sleep(50);
-    mouse_event(MOUSEEVENTF_RIGHTDOWN, x, 230, 0, 0);
+    int x = 512;
+    SetCursorPos(x, 180);
+    mouse_event(MOUSEEVENTF_RIGHTDOWN, x, 180, 0, 0);
     int nx = x - step;
-    SetCursorPos(nx, 230);
+    SetCursorPos(nx, 180);
     Sleep(200);
-    mouse_event(MOUSEEVENTF_RIGHTUP, nx, 230, 0, 0);
+    mouse_event(MOUSEEVENTF_RIGHTUP, nx, 180, 0, 0);
     Sleep(300);
 }
-
+void Setkeyw(int msec)
+{   keybd_event(0x57, 0x45, KEYEVENTF_EXTENDEDKEY | 0, 0);
+    Sleep(msec);
+    keybd_event(0x57, 0x45, KEYEVENTF_EXTENDEDKEY | KEYEVENTF_KEYUP, 0);
+    Sleep(300);
+}
 
 void StartGUI()
 {
 
     Sleep(2000);
     SetCursorPos(512, 230);
-    mouse_event(MOUSEEVENTF_RIGHTDOWN, 512, 230, 0, 0);
+    mouse_event(MOUSEEVENTF_RIGHTDOWN, 512, 180, 0, 0);
     Sleep(10);
-    mouse_event(MOUSEEVENTF_RIGHTUP, 512, 230, 0, 0);
+    mouse_event(MOUSEEVENTF_RIGHTUP, 512, 180, 0, 0);
     Sleep(100);
-    int t1 = 0;
     while (isTreading)
     {
 
-        CheckTarget();
-        CheckKill();
-        SetWindowTextA(hStaticControl, (to_string(t1)).c_str());
+        turnleft(400);//left 1285
+        turnleft(400);
+        turnleft(400);
+        turnleft(85);
+        Setkeyw(8000);// w 8000
+        leftclick(514, 334);// 514 334
+        Sleep(1000);
+        leftclick(520, 340);//520 340 задание
+        leftclick(520, 325);//520 325 no pets
+        leftclick(520, 325);//520 325 gotovi
+        Sleep(8000);
+        turnleft(400);
+        turnleft(130);// l 530
+        leftclick(520, 332);//520 332
         Sleep(2000);
-        t1++;
-        if (t1 == 10)
-        {
-            SetWindowTextA(hStaticControl, "Baff");
-            Set1();
-            Sleep(1800);
-            SetF5();
-            Sleep(300);
-            SetWindowTextA(hStaticControl, "Key - 3");
-            Set3();
-            Sleep(500);
-            t1 = 0;
-        }
+        leftclick(520, 340);//520 340 задание
+        leftclick(520, 325);//520 325 борьба во имя
+        leftclick(520, 325);//520 325 это про нас
+        leftclick(520, 325);//520 325 это про нас
+        Sleep(1000);
+        turnright(200);//640
+        turnright(200);
+        turnright(240);
+        Setkeyw(14000);// w 8000
+        turnleft(400);
+//        turnleft(400);
+        Setkeyw(8000);// w 8000
+
+//        CloseHandle(thread2);
+
+//        Sleep(300000);
+
+        CheckTarget();
+            if (target)
+            {
+            CheckKill();
+            }
+        Sleep(1000);
     }
 }
