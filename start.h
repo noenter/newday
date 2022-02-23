@@ -158,11 +158,6 @@ void CheckKill()
 {
     int xkn = xk + 21;
     while (xk < xkn)
-    {   HDC dng = GetDC(NULL);
-    {
-        HDC dng = GetDC(NULL);
-    {
-        HDC dng = GetDC(NULL);
     {
         HDC dng = GetDC(NULL);
         COLORREF c = GetPixel(dng, xk, yk);
